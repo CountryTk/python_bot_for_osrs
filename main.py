@@ -1,12 +1,25 @@
+
 from pyautogui import *
 from PIL import Image
 from time import sleep
 import random
 from pymsgbox import alert
+from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox, QLabel
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import pyqtSlot
+
+
 FAILSAFE = True
 
-class main():
+class main(QMainWindow):
     def __init__(self):
+        super().__init__()
+        self.title = 'Python bot'
+        self.left = 100
+        self.top = 100
+        self.width = 400
+        self.height = 140
+        #self.setWindowIcon(QIcon()
         self.willow_log = r'images\willow.png'
         self.maple_log = r'images\maple_log.png'
         self.yew_log = None
@@ -42,11 +55,18 @@ class main():
         else: 
             click(image, duration=0.92)
     def main(self):
-        choice = input()
-        if choice == "willow":
-            self.willow()
-        elif choice == "maple":
-            self.maple()
+
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+ 
+        # Create textbox
+        self.button = QPushButton('Willows',self)
+        self.button.clicked.connect(self.willow)
+        self.show()
+        #if choice == "willow":
+            #self.willow()
+       # elif choice == "maple":
+            #self.maple()
         
 
 
@@ -56,6 +76,9 @@ class main():
 
 
 if __name__ == '__main__':
+
+    app = QApplication(sys.argv)
     go = main()
+    sys.exit(app.exec_())
     
     
