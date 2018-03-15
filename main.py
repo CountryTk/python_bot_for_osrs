@@ -21,7 +21,7 @@ class main(QMainWindow):
         self.top = 100
         self.width = 400
         self.height = 340
-        self.threading = Thread()
+        self.threading = Thread() #yes
         self.threading.start()
         #self.setWindowIcon(QIcon()
         self.willow_log = r'images\willow.png'
@@ -50,24 +50,24 @@ class main(QMainWindow):
 
         #creating maple button
 
-        self.button_maple = QPushButton("Maple longbows", self)
-        self.button_maple.clicked.connect(self.threading.maple)
-        self.button_maple.move(100,310)
+        button_maple = QPushButton("Maple longbows", self)
+        button_maple.clicked.connect(self.threading.maple)
+        button_maple.move(100,310)
 
         #creating yew longbow button
-        self.button_yew = QPushButton('Yew longbows', self)
-        self.button_yew.clicked.connect(self.threading.yew)
-        self.button_yew.move(190,0)
+        button_yew = QPushButton('Yew longbows', self)
+        button_yew.clicked.connect(self.threading.yew)
+        button_yew.move(190,0)
 
         #creating magic longbow button
-        self.button_magic = QPushButton("Magic longbows", self)
-        self.button_magic.clicked.connect(self.threading.magic)
-        self.button_magic.move(290, 0)
+        button_magic = QPushButton("Magic longbows", self)
+        button_magic.clicked.connect(self.threading.magic)
+        button_magic.move(290, 0)
         #Creating a new label for our image
-        self.backpack_loadout_label = QLabel(self)
-        self.backpack_image_label = QPixmap(self.backpack_image)
-        self.backpack_loadout_label.setPixmap(self.backpack_image_label)
-        self.backpack_loadout_label.resize(self.backpack_image_label.width(), self.backpack_image_label.height())
+        backpack_loadout_label = QLabel(self)
+        backpack_image_label = QPixmap(self.backpack_image)
+        backpack_loadout_label.setPixmap(backpack_image_label)
+        backpack_loadout_label.resize(backpack_image_label.width(), backpack_image_label.height())
         
         
         #Creating the reccommendation label and adding text to it
