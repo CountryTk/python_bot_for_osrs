@@ -1,9 +1,11 @@
-
+import os
 from pyautogui import *
 from PIL import Image
 from time import sleep
 import random
 import threading
+import win32gui
+import psutil
 from pymsgbox import alert
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLineEdit, QMessageBox, QLabel, QDialog
 from PyQt5.QtGui import QIcon, QPixmap
@@ -12,6 +14,10 @@ from PyQt5 import QtTest
 
 
 FAILSAFE = True
+
+
+#test = win32gui.GetWindowRect(x)
+
 
 class main(QMainWindow):
     def __init__(self):
@@ -33,15 +39,39 @@ class main(QMainWindow):
         #self.willow_long_bow = r'images\long_bow.png'
         self.backpack_image = r'images\backpack_loadout.png'
         self.python_power = r'images\python_powered.png'
-        self.main()  # running the main func
+        self.choose_client()  # running the main func
+    def choose_client(self):
+        question = prompt("Which client are you currently using?", "Client", "Konduit or OSbuddy?")
+        if question is not None:
+            question_new = question.title()
+            if question_new == "Konduit":
+                self.konduit()
+        else:
+            os._exit(1) #Closing the program if the question is none aka cancel is pressed
+            #If the input is konduit, run the konduit function
 
-    
+    def konduit(self):
+        name = password('Enter your Konduit username') #getting the username of the client so we could find the window
+        if name is None:
+            os._exit(1)
+        while name is not None:
+            global x #Creating a global variable to use it in the main function to get the location of the konduit client
+            x= win32gui.FindWindow(None, "Konduit Oldschool - " + name) #FInding the window using the name
+            if x != 0:
+                self.main()
+                print(x)
+                break #If the name matches to the window name then run the main function
+            alert("Window not found, please open your konduit client and enter the correct username")
+            name = password('Enter your Konduit username')
+    def osbuddy(self):
+        print("fuck you osbuddy with you and your client names OMG")
+
     def main(self):
-
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
- 
-        
+
+        windoiw = win32gui.GetWindowRect(x)
+        print(windoiw)
         #creating willow button
 
         button = QPushButton('Willow longbows',self)
@@ -51,8 +81,7 @@ class main(QMainWindow):
         #creating maple button
 
         button_maple = QPushButton("Maple longbows", self)
-        b1 = button_maple.clicked.connect(self.threading.maple)
-        print(b1)
+        button_maple.clicked.connect(self.threading.maple)
         button_maple.move(100,310)
 
         #creating yew longbow button
@@ -142,7 +171,6 @@ class Thread(QThread):
 
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     go = main()
     sys.exit(app.exec_())
