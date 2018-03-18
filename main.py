@@ -14,11 +14,7 @@ from PyQt5 import QtTest
 
 
 FAILSAFE = True
-
-
-#test = win32gui.GetWindowRect(x)
-
-
+x = None #Setting the variable to None so that the globals in classes could change it
 class main(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -56,13 +52,15 @@ class main(QMainWindow):
             os._exit(1)
         while name is not None:
             global x #Creating a global variable to use it in the main function to get the location of the konduit client
-            x= win32gui.FindWindow(None, "Konduit Oldschool - " + name) #FInding the window using the name
+            x = win32gui.FindWindow(None, "Konduit Oldschool - " + name) #FInding the window using the name
             if x != 0:
                 self.main()
                 print(x)
                 break #If the name matches to the window name then run the main function
             alert("Window not found, please open your konduit client and enter the correct username")
             name = password('Enter your Konduit username')
+            if name is None:
+                os._exit(1)
     def osbuddy(self):
         print("fuck you osbuddy with you and your client names OMG")
 
@@ -140,7 +138,8 @@ class Thread(QThread):
         log_image = locateCenterOnScreen(self.willow_log)
         if log_image is None or self.knife_willows is None:
             alert('No logs found or knife found', 'Error')
-            return "shit"
+            test = win32gui.GetWindowRect(x)
+            print(test)
         else:
             click(log_image, duration=duration_time)
             QtTest.QTest.qWait(1000)
@@ -174,6 +173,3 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     go = main()
     sys.exit(app.exec_())
-    
-    
-
