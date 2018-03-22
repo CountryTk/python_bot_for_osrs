@@ -27,6 +27,7 @@ class main(QMainWindow):
         self.threading.start()
         #self.setWindowIcon(QIcon()
         self.willow_log = r'images\willow.png'
+
         #self.maple_log = r'images\maple_log.png'
         #self.yew_log = None
         #self.magic_log = None
@@ -38,10 +39,9 @@ class main(QMainWindow):
         self.choose_client()  # running the main func
     def choose_client(self):
         question = prompt("Which client are you currently using?", "Client", "Konduit or OSbuddy?")
-        if question is not None:
-            question_new = question.title()
-            if question_new == "Konduit":
-                self.konduit()
+        question_new = question.title()
+        if question_new == "Konduit" or question_new == "Osbuddy":
+            self.konduit()
         else:
             os._exit(1) #Closing the program if the question is none aka cancel is pressed
             #If the input is konduit, run the konduit function
@@ -127,18 +127,19 @@ class Thread(QThread):
         self.knife_willows = r'images\knife_willow.png'
         self.willow_long_bow = r'images\long_bow.png'
         self.backpack_image = r'images\backpack_loadout.png'
-
+        self.maple_knife = r'images\knife_maple.png'
+        self.maple_long_bow = r'images\maple_longbow.png'
 
 
     def willow(self):
         duration_time = random.uniform(0.80, 1.35)
         #print(duration_time)
         #finding the log
-        knife = locateCenterOnScreen(self.knife_willows) 
+        test = win32gui.GetWindowRect(x)
+        knife = locateCenterOnScreen(self.knife_willows)
         log_image = locateCenterOnScreen(self.willow_log)
         if log_image is None or self.knife_willows is None:
             alert('No logs found or knife found', 'Error')
-            test = win32gui.GetWindowRect(x)
             print(test)
         else:
             click(log_image, duration=duration_time)
@@ -154,13 +155,21 @@ class Thread(QThread):
 
 
     def maple(self):
+        duration_time = random.uniform(0.80, 1.35)
         image = locateCenterOnScreen(self.maple_log)
+        knife = locateCenterOnScreen(self.maple_knife)
         if image is None:
             alert('No logs found', 'Error')
-        else: 
-            click(image, duration=0.92)
-            if self.knife_willows is None:
-                alert("No knife found", "Error")
+        else:
+            click(image, duration=duration_time)
+            QtTest.QTest.qWait(1000)
+            if knife is not None:
+                click(knife, duration=duration_time)
+                QtTest.QTest.qWait(2042)
+                maple_longbow = locateCenterOnScreen(self.maple_long_bow)
+                click(maple_longbow, duration=duration_time)
+            else:
+                alert('No knife found', 'Error')
 
     def yew(self):
         pass
