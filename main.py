@@ -54,7 +54,7 @@ class main(QMainWindow):
             global x #Creating a global variable to use it in the main function to get the location of the konduit client
             x = win32gui.FindWindow(None, "Konduit Oldschool - " + name) #FInding the window using the name
             if x != 0:
-                self.main()
+                self.main_fletching()
                 print(x)
                 break #If the name matches to the window name then run the main function
             alert("Window not found, please open your konduit client and enter the correct username")
@@ -64,7 +64,7 @@ class main(QMainWindow):
     def osbuddy(self):
         print("fuck you osbuddy with you and your client names OMG")
 
-    def main(self):
+    def main_fletching(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
@@ -114,12 +114,13 @@ class main(QMainWindow):
         python_label.move(260, 180)
         
         self.show()
-        
+    def main_woodcutting(self):
+        pass
 #Creating a new class for threading
 class Thread(QThread):
     def __init__(self):
         super().__init__()
-        self.willow_log = r'images\willow.png'
+        self.willow_log = r'images\willow_log.png'
         self.maple_log = r'images\maple_log.png'
         self.yew_log = None
         self.magic_log = None
@@ -129,47 +130,99 @@ class Thread(QThread):
         self.backpack_image = r'images\backpack_loadout.png'
         self.maple_knife = r'images\knife_maple.png'
         self.maple_long_bow = r'images\maple_longbow.png'
-
+        self.wrench = r'images\wrench.png'
+        self.screen = r'images\screen.png'
+        self.backpack = r'images\backpack.png'
 
     def willow(self):
         duration_time = random.uniform(0.80, 1.35)
         #print(duration_time)
         #finding the log
-        test = win32gui.GetWindowRect(x)
-        knife = locateCenterOnScreen(self.knife_willows)
-        log_image = locateCenterOnScreen(self.willow_log)
-        if log_image is None or self.knife_willows is None:
-            alert('No logs found or knife found', 'Error')
-            print(test)
-        else:
-            click(log_image, duration=duration_time)
-            QtTest.QTest.qWait(1000)
-            if knife is None:
-                alert('No knife found', 'Error')
+        wrench = locateCenterOnScreen(self.wrench)
+        if wrench is None:
+            knife = locateCenterOnScreen(self.knife_willows)
+            try:
+                log_image = locateCenterOnScreen(self.willow_log) #Trying to get the image if failed then exit
+            except:
+                alert('No logs found, exiting', "Error")
+                os._exit(1)
+            if log_image is None:
+                alert('No logs found or knife found', 'Error')
 
-            click(knife, duration=0.92)
-            QtTest.QTest.qWait(1000)
-            long_bow_image = locateCenterOnScreen(self.willow_long_bow)
-            click(long_bow_image, duration=duration_time)
-            QtTest.QTest.qWait(50000) # It takes approx 50 seconds to fletch the whole in
+            else:
+                click(log_image, duration=duration_time)
+                QtTest.QTest.qWait(1000)
+                if knife is None:
+                    alert('No knife found', 'Error')
+
+                click(knife, duration=0.92)
+                QtTest.QTest.qWait(1000)
+                long_bow_image = locateCenterOnScreen(self.willow_long_bow)
+                click(long_bow_image, duration=duration_time)
+                QtTest.QTest.qWait(50000)  # It takes approx 50 seconds to fletch the whole in
+        else:
+            click(wrench, duration=.92)
+            QtTest.QTest.qWait(1203)
+            screen = locateCenterOnScreen(self.screen)
+            click(screen, duration=.952)
+            QtTest.QTest.qWait(901)
+            backpack = locateCenterOnScreen(self.backpack)
+            click(backpack, duration=.1023)
+            QtTest.QTest.qWait(2031)
+            knife = locateCenterOnScreen(self.knife_willows)
+            log_image = locateCenterOnScreen(self.willow_log)
+            if log_image is None or self.knife_willows is None:
+                alert('No logs found or knife found', 'Error')
+
+            else:
+                click(log_image, duration=duration_time)
+                QtTest.QTest.qWait(1000)
+                if knife is None:
+                    alert('No knife found', 'Error')
+
+                click(knife, duration=0.92)
+                QtTest.QTest.qWait(1000)
+                long_bow_image = locateCenterOnScreen(self.willow_long_bow)
+                click(long_bow_image, duration=duration_time)
+                QtTest.QTest.qWait(50000)  # It takes approx 50 seconds to fletch the whole in
+
+        #if wrench is not None:
+            #click(wrench)
+            #QtTest.QTest.qWait(1240)
+            #screen = locateCenterOnScreen(self.screen)
+            #click(screen)
+
 
 
     def maple(self):
         duration_time = random.uniform(0.80, 1.35)
-        image = locateCenterOnScreen(self.maple_log)
-        knife = locateCenterOnScreen(self.maple_knife)
-        if image is None:
-            alert('No logs found', 'Error')
-        else:
-            click(image, duration=duration_time)
-            QtTest.QTest.qWait(1000)
-            if knife is not None:
-                click(knife, duration=duration_time)
-                QtTest.QTest.qWait(2042)
-                maple_longbow = locateCenterOnScreen(self.maple_long_bow)
-                click(maple_longbow, duration=duration_time)
+        wrench = locateCenterOnScreen(self.wrench)
+        if wrench is None: #If the wrench is not found that means the client is already in fixed mode
+            image = locateCenterOnScreen(self.maple_log)  # location image so the image would be found
+            knife = locateCenterOnScreen(self.maple_knife)
+            if image is None:
+                alert('No logs found', 'Error')
             else:
-                alert('No knife found', 'Error')
+                click(image, duration=duration_time)
+                QtTest.QTest.qWait(1000)
+                if knife is not None:
+                    click(knife, duration=duration_time)
+                    QtTest.QTest.qWait(2042)
+                    maple_longbow = locateCenterOnScreen(self.maple_long_bow)
+                    click(maple_longbow, duration=duration_time)
+                else:
+                    alert('No knife found', 'Error') #THen run this function that takes care of the botting part
+        else: #if its not then we are going to put it on fixed mode
+            click(wrench, duration=.92)
+            QtTest.QTest.qWait(1203)
+            screen = locateCenterOnScreen(self.screen)
+            click(screen, duration=.952)
+            QtTest.QTest.qWait(901)
+            backpack = locateCenterOnScreen(self.backpack)
+            click(backpack, duration=.1023)
+            QtTest.QTest.qWait(2031)
+
+        
 
     def yew(self):
         pass
