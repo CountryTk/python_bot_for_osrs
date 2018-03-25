@@ -15,6 +15,7 @@ from PyQt5 import QtTest
 
 FAILSAFE = True
 x = None #Setting the variable to None so that the globals in classes could change it
+
 class main(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -138,28 +139,39 @@ class Thread(QThread):
         duration_time = random.uniform(0.80, 1.35)
         #print(duration_time)
         #finding the log
+        knives = os.listdir(r'knife_images')
         wrench = locateCenterOnScreen(self.wrench)
-        if wrench is None:
-            knife = locateCenterOnScreen(self.knife_willows)
+        if wrench is None: #If we don't find wrench on the screen aka the client is already in fixed mode then run the code below
+
+
+            #knife = locateCenterOnScreen(self.knife_willows)
             try:
                 log_image = locateCenterOnScreen(self.willow_log) #Trying to get the image if failed then exit
             except:
                 alert('No logs found, exiting', "Error")
                 os._exit(1)
+
             if log_image is None:
                 alert('No logs found or knife found', 'Error')
 
             else:
                 click(log_image, duration=duration_time)
                 QtTest.QTest.qWait(1000)
-                if knife is None:
-                    alert('No knife found', 'Error')
+                for knifes in knives:
+                    knife = r'knife_images/' + knifes
+                    if knife is not None:
+                        print("well fuck")
+                        #click(knife, duration=duration_time)
+                        #QtTest.QTest.qWait(1000)
+                        #long_bow_image = locateCenterOnScreen(self.willow_long_bow)
+                        #click(long_bow_image, duration=duration_time)
+                        #QtTest.QTest.qWait(50000)  # It takes approx 50 seconds to fletch the whole in
+                    else:
+                        alert("Error, no knife found")
 
-                click(knife, duration=0.92)
-                QtTest.QTest.qWait(1000)
-                long_bow_image = locateCenterOnScreen(self.willow_long_bow)
-                click(long_bow_image, duration=duration_time)
-                QtTest.QTest.qWait(50000)  # It takes approx 50 seconds to fletch the whole in
+
+
+
         else:
             click(wrench, duration=.92)
             QtTest.QTest.qWait(1203)
@@ -171,9 +183,9 @@ class Thread(QThread):
             QtTest.QTest.qWait(2031)
             knife = locateCenterOnScreen(self.knife_willows)
             log_image = locateCenterOnScreen(self.willow_log)
+
             if log_image is None or self.knife_willows is None:
                 alert('No logs found or knife found', 'Error')
-
             else:
                 click(log_image, duration=duration_time)
                 QtTest.QTest.qWait(1000)
@@ -197,9 +209,12 @@ class Thread(QThread):
     def maple(self):
         duration_time = random.uniform(0.80, 1.35)
         wrench = locateCenterOnScreen(self.wrench)
+        knives = os.listdir(r'knife_images')  # Listdir gets all the image names in the directory knife_images
         if wrench is None: #If the wrench is not found that means the client is already in fixed mode
             image = locateCenterOnScreen(self.maple_log)  # location image so the image would be found
-            knife = locateCenterOnScreen(self.maple_knife)
+            for knife in knives:
+                if locateCenterOnScreen(knife) is None:
+                    print('success')
             if image is None:
                 alert('No logs found', 'Error')
             else:
