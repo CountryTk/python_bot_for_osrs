@@ -159,15 +159,18 @@ class Thread(QThread):
                 QtTest.QTest.qWait(1000)
                 for knifes in knives:
                     knife = r'knife_images/' + knifes
-                    if knife is not None:
+                    detected_knife = locateCenterOnScreen(knife)
+                    if detected_knife is not None:
                         print("well fuck")
-                        #click(knife, duration=duration_time)
-                        #QtTest.QTest.qWait(1000)
-                        #long_bow_image = locateCenterOnScreen(self.willow_long_bow)
-                        #click(long_bow_image, duration=duration_time)
-                        #QtTest.QTest.qWait(50000)  # It takes approx 50 seconds to fletch the whole in
+                        click(detected_knife, duration=duration_time)
+                        QtTest.QTest.qWait(1000)
+                        long_bow_image = locateCenterOnScreen(self.willow_long_bow)
+                        click(long_bow_image, duration=duration_time)
+                        QtTest.QTest.qWait(50000) # It takes approx 50 seconds to fletch the whole inv
                     else:
-                        alert("Error, no knife found")
+                        print("finding the knife")
+
+
 
 
 
