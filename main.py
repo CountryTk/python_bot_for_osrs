@@ -171,11 +171,15 @@ class Thread(QThread):
                                 print("Waiting 50 seconds")
                                 QtTest.QTest.qWait(49742)  # It takes approx 50 seconds to fletch the whole inventory
                                 print("Inventory finished...")
-                                break
-                        else:
+                                os._exit(1)
+                                running_log = False
+                        elif log_location is None:
                             print("Finding the log...") #if we didnt find a log then print this until we find a log
-                else:
+                        
+                elif detected_knife is None:
                     print("Finding the knife...")
+                else:
+                    os._exit(1)
 
         if wrench is None: #If we don't find wrench on the screen aka the client is already in fixed mode then run the code below
             logfletch() #running the logfletch function that handles everything with willow longbow fletching
@@ -194,35 +198,44 @@ class Thread(QThread):
     def maple(self):
         duration_time = random.uniform(0.80, 1.35)
         wrench = locateCenterOnScreen(self.wrench)
-        knives = os.listdir(r'knife_images')  # Listdir gets all the image names in the directory knife_images
-        if wrench is None: #If the wrench is not found that means the client is already in fixed mode
-            image = locateCenterOnScreen(self.maple_log)  # location image so the image would be found
-            for knife in knives:
-                if locateCenterOnScreen(knife) is None:
-                    print('success')
-            if image is None:
-                alert('No logs found', 'Error')
-            else:
-                click(image, duration=duration_time)
-                QtTest.QTest.qWait(1000)
-                if knife is not None:
-                    click(knife, duration=duration_time)
-                    QtTest.QTest.qWait(2042)
-                    maple_longbow = locateCenterOnScreen(self.maple_long_bow)
-                    click(maple_longbow, duration=duration_time)
-                else:
-                    alert('No knife found', 'Error') #THen run this function that takes care of the botting part
-        else: #if its not then we are going to put it on fixed mode
-            click(wrench, duration=.92)
-            QtTest.QTest.qWait(1203)
-            screen = locateCenterOnScreen(self.screen)
-            click(screen, duration=.952)
-            QtTest.QTest.qWait(901)
-            backpack = locateCenterOnScreen(self.backpack)
-            click(backpack, duration=.1023)
-            QtTest.QTest.qWait(2031)
+        knives = os.listdir(r'knife_images')# Listdir gets all the image names in the directory knife_images
+        logs = os.listdir(r'maple_images')
+        def fletch_logs():
+            for knifes in knives: #First we find the knife in the knives list
+                knife = r'knife_images/' + knifes #Then we attach knife to the relative path
+                detected_knife = locateCenterOnScreen(knife)
+                #Now we're trying to locate the knife on the screen
+                if detected_knife is not None: #If we found the knife then set running to true
+                    running = True
 
-        
+                    while running: #While running is true print knife found and click on it then stop the while loop
+                        print("Knife found!")
+                        click(detected_knife, duration=duration_time)
+                        running = False
+
+                    for log in logs: #After the while loop is stopped, jump to this loop
+                        log_new = r'maple_images/' + log
+                        log_location = locateCenterOnScreen(log_new)
+                        if log_location is not None:
+                            running_log = True
+                            while running_log: #When we found the log and running_log is true then click on the log, wait and click on the longbow image and then wait 50 seconds
+                                print("Log found!")
+                                click(log_location, duration=duration_time)
+                                print("Waiting 2 seconds")
+                                QtTest.QTest.qWait(2000)
+                                print("Clicking on the longbow...")
+                                long_bow_image = locateCenterOnScreen(self.maple_long_bow)
+                                click(long_bow_image, duration=duration_time)
+                                print("Waiting 50 seconds")
+                                QtTest.QTest.qWait(49742)  # It takes approx 50 seconds to fletch the whole inventory
+                                print("Inventory finished...")
+                                running_log = False
+                        else:
+                            print("Finding the log...") #if we didnt find a log then print this until we find a log
+                else:
+                    print("Finding the knife...")
+        if wrench is None:
+            fletch_logs()
 
     def yew(self):
         pass
