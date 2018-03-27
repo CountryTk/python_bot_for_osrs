@@ -104,8 +104,8 @@ class main(QMainWindow):
         rec_label= QLabel(self)
         rec_label.move(10, 260)
         rec_label.resize(185,10)
-        rec_label.setText("You must use this backpack loadout ^")
-        
+        rec_label.setText("Optimal backpack loadout ^")
+
         #Python power
         python_label = QLabel(self)
         python_label_pixmap = QPixmap(self.python_power)
@@ -141,41 +141,46 @@ class Thread(QThread):
         #finding the log
         knives = os.listdir(r'knife_images')
         wrench = locateCenterOnScreen(self.wrench)
-        if wrench is None: #If we don't find wrench on the screen aka the client is already in fixed mode then run the code below
+        logs = os.listdir(r'willow_images')
+        def logfletch():
+            for knifes in knives: #First we find the knife in the knives list
+                knife = r'knife_images/' + knifes #Then we attach knife to the relative path
+                detected_knife = locateCenterOnScreen(knife)
+                #Now we're trying to locate the knife on the screen
+                if detected_knife is not None: #If we found the knife then set running to true
+                    running = True
 
-
-            #knife = locateCenterOnScreen(self.knife_willows)
-            try:
-                log_image = locateCenterOnScreen(self.willow_log) #Trying to get the image if failed then exit
-            except:
-                alert('No logs found, exiting', "Error")
-                os._exit(1)
-
-            if log_image is None:
-                alert('No logs found or knife found', 'Error')
-
-            else:
-                click(log_image, duration=duration_time)
-                QtTest.QTest.qWait(1000)
-                for knifes in knives:
-                    knife = r'knife_images/' + knifes
-                    detected_knife = locateCenterOnScreen(knife)
-                    if detected_knife is not None:
-                        print("well fuck")
+                    while running: #While running is true print knife found and click on it then stop the while loop
+                        print("Knife found!")
                         click(detected_knife, duration=duration_time)
-                        QtTest.QTest.qWait(1000)
-                        long_bow_image = locateCenterOnScreen(self.willow_long_bow)
-                        click(long_bow_image, duration=duration_time)
-                        QtTest.QTest.qWait(50000) # It takes approx 50 seconds to fletch the whole inv
-                    else:
-                        print("finding the knife")
+                        running = False
 
+                    for log in logs: #After the while loop is stopped, jump to this loop
+                        log_new = r'willow_images/' + log
+                        log_location = locateCenterOnScreen(log_new)
+                        if log_location is not None:
+                            running_log = True
+                            while running_log: #When we found the log and running_log is true then click on the log, wait and click on the longbow image and then wait 50 seconds
+                                print("Log found!")
+                                click(log_location, duration=duration_time)
+                                print("Waiting 2 seconds")
+                                QtTest.QTest.qWait(2000)
+                                print("Clicking on the longbow...")
+                                long_bow_image = locateCenterOnScreen(self.willow_long_bow)
+                                click(long_bow_image, duration=duration_time)
+                                print("Waiting 50 seconds")
+                                QtTest.QTest.qWait(49742)  # It takes approx 50 seconds to fletch the whole inventory
+                                print("Inventory finished...")
+                                break
+                        else:
+                            print("Finding the log...") #if we didnt find a log then print this until we find a log
+                else:
+                    print("Finding the knife...")
 
+        if wrench is None: #If we don't find wrench on the screen aka the client is already in fixed mode then run the code below
+            logfletch() #running the logfletch function that handles everything with willow longbow fletching
 
-
-
-
-        else:
+        else: #if the wrench isnt found on the screen then do this
             click(wrench, duration=.92)
             QtTest.QTest.qWait(1203)
             screen = locateCenterOnScreen(self.screen)
@@ -184,30 +189,7 @@ class Thread(QThread):
             backpack = locateCenterOnScreen(self.backpack)
             click(backpack, duration=.1023)
             QtTest.QTest.qWait(2031)
-            knife = locateCenterOnScreen(self.knife_willows)
-            log_image = locateCenterOnScreen(self.willow_log)
-
-            if log_image is None or self.knife_willows is None:
-                alert('No logs found or knife found', 'Error')
-            else:
-                click(log_image, duration=duration_time)
-                QtTest.QTest.qWait(1000)
-                if knife is None:
-                    alert('No knife found', 'Error')
-
-                click(knife, duration=0.92)
-                QtTest.QTest.qWait(1000)
-                long_bow_image = locateCenterOnScreen(self.willow_long_bow)
-                click(long_bow_image, duration=duration_time)
-                QtTest.QTest.qWait(50000)  # It takes approx 50 seconds to fletch the whole in
-
-        #if wrench is not None:
-            #click(wrench)
-            #QtTest.QTest.qWait(1240)
-            #screen = locateCenterOnScreen(self.screen)
-            #click(screen)
-
-
+            logfletch() #After setting the screen to static size, run this function that handles the willow fletching
 
     def maple(self):
         duration_time = random.uniform(0.80, 1.35)
