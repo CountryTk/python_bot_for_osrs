@@ -1,7 +1,8 @@
 # A python bot
-A fletching bot for oldschool runescape using image detection(lmao)
+A bot for oldschool runescape using image detection(lmao)
 
 Bot supports willow longbow and maple longbow fletching.
+Bot will support woodcutting logs and making them into arrow shafts, rinse and repeat.
 Bot is now finished. No it doesn't bank for you, you have to bank the longbows and get new logs yourself!
 
 ![Bot's UI](https://github.com/Fuchsiaff/python_bot_for_osrs/blob/master/images/gui.PNG)
