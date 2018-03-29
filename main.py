@@ -28,7 +28,7 @@ class main(QMainWindow):
         self.threading.start()
         #self.setWindowIcon(QIcon()
         self.willow_log = r'images\willow.png'
-
+        self.trees = r'images\tree.png'
         #self.maple_log = r'images\maple_log.png'
         #self.yew_log = None
         #self.magic_log = None
@@ -37,7 +37,7 @@ class main(QMainWindow):
         #self.willow_long_bow = r'images\long_bow.png'
         self.backpack_image = r'images\backpack_loadout.png'
         self.python_power = r'images\python_powered.png'
-        self.choose_client()  # running the main func
+        self.select_bot()  # running the main func
     def choose_client(self):
         question = prompt("Which client are you currently using?", "Client", "Konduit or OSbuddy?")
         question_new = question.title()
@@ -55,7 +55,7 @@ class main(QMainWindow):
             global x #Creating a global variable to use it in the main function to get the location of the konduit client
             x = win32gui.FindWindow(None, "Konduit Oldschool - " + name) #FInding the window using the name
             if x != 0:
-                self.main_fletching()
+                self.select_bot()
                 print(x)
                 break #If the name matches to the window name then run the main function
             alert("Window not found, please open your konduit client and enter the correct username")
@@ -64,7 +64,12 @@ class main(QMainWindow):
                 os._exit(1)
     def osbuddy(self):
         print("fuck you osbuddy with you and your client names OMG")
-
+    def select_bot(self): #A function to select the bot you want to use
+        selecting_bot = confirm("Which bot", "Shit", buttons=['FLETCH', 'WC & FLETCH'])
+        if  selecting_bot == 'FLETCH':
+            self.main_fletching()
+        elif selecting_bot == "WC & FLETCH":
+            self.main_woodcutting_and_fletching_arrowtips()
     def main_fletching(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -115,8 +120,25 @@ class main(QMainWindow):
         python_label.move(260, 180)
         
         self.show()
-    def main_woodcutting(self):
-        pass
+
+
+    def main_woodcutting_and_fletching_arrowtips(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, 339, 450)
+        #Creating the button to run IT
+        button = QPushButton('Start', self)
+        button.move(0, 390)
+        button.resize(339,60)
+        button.clicked.connect(self.threading.woodcutting_fletching)
+
+        #Creating the tree image on the gui
+        tree = QLabel(self)
+        tree_pic = QPixmap(self.trees)
+        tree.setPixmap(tree_pic)
+        tree.resize(tree_pic.width(), tree_pic.height())
+
+
+        self.show()
 #Creating a new class for threading
 class Thread(QThread):
     def __init__(self):
@@ -134,7 +156,7 @@ class Thread(QThread):
         self.wrench = r'images\wrench.png'
         self.screen = r'images\screen.png'
         self.backpack = r'images\backpack.png'
-
+        self.xp_button = r'images\xp_button.png'
     def willow(self):
         duration_time = random.uniform(0.80, 1.35)
         #print(duration_time)
@@ -142,7 +164,10 @@ class Thread(QThread):
         knives = os.listdir(r'knife_images')
         wrench = locateCenterOnScreen(self.wrench)
         logs = os.listdir(r'willow_images')
+
         def logfletch():
+
+
             for knifes in knives: #First we find the knife in the knives list
                 knife = r'knife_images/' + knifes #Then we attach knife to the relative path
                 detected_knife = locateCenterOnScreen(knife)
@@ -242,6 +267,48 @@ class Thread(QThread):
         pass
     def magic(self):
         pass
+    def woodcutting_fletching(self):
+        compas = r'images/compass_check.png'
+        compass_location = locateCenterOnScreen(compas)
+        global cutting
+        def checkCutting():
+            cutting = True
+            while cutting:
+                not_cutting = r'images\tree_stub.png'
+        def click_compass_N():
+            compass = moveTo(1720, 60, duration=0.7243242342342365246436231) #Thats the location of the compass
+            click(compass)
+        def woodcut(): #this is the function that'll start finding the trees and cutting them etc
+            trees = os.listdir(r'maple_trees')
+            if compass_location is None:
+                click_compass_N()
+            else:
+                print('fuck off')
+            for tree in trees:
+                maple_tree = r'maple_trees/' + tree
+                tree_location = locateCenterOnScreen(maple_tree)
+                if tree_location is not None:
+                    print("Tree found!")
+                    moveTo(tree_location, duration=1)
+                    click(tree_location)
+                    checkCutting()
+                    break
+                else:
+                    print("Searching for tree")
+        wrench = locateCenterOnScreen(self.wrench)
+        if wrench is None: #If we don't find wrench on the screen aka the client is already in fixed mode then run the code below
+            woodcut() #running the logfletch function that handles everything with willow longbow fletching
+
+        else: #if the wrench isnt found on the screen then do this
+            click(wrench, duration=.92)
+            QtTest.QTest.qWait(1203)
+            screen = locateCenterOnScreen(self.screen)
+            click(screen, duration=.952)
+            QtTest.QTest.qWait(901)
+            backpack = locateCenterOnScreen(self.backpack)
+            click(backpack, duration=.1023)
+            QtTest.QTest.qWait(2031)
+            #logfletch() #After setting the screen to static size, run this function that handles the willow fletching
 
 
 if __name__ == '__main__':
