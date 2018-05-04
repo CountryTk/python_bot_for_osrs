@@ -1,5 +1,5 @@
 # A python bot
-A bot for oldschool runescape using image detection(lmao)
+A bot for oldschool runescape using image detection
 
 Bot supports willow longbow and maple longbow fletching.
 Bot is now finished. No it doesn't bank for you, you have to bank the longbows and get new logs yourself!
